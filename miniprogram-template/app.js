@@ -1,12 +1,20 @@
 App({
   globalData: {
-    // 生产环境配置
-    apiBase: 'https://cardbuy.xingke888.com/api/v1',
-    webBase: 'https://cardbuy.xingke888.com',
+    // 开发模式开关：true = 本地开发，false = 生产环境
+    isDev: true,
 
-    // 本地开发配置（开发时取消注释使用）
-    // apiBase: 'http://localhost:8001/api/v1',
-    // webBase: 'http://localhost:8001',
+    // 根据开发模式自动选择配置
+    get apiBase() {
+      return this.isDev
+        ? 'http://localhost:8001/api/v1'  // 本地开发
+        : 'https://cardbuy.xingke888.com/api/v1'  // 生产环境
+    },
+
+    get webBase() {
+      return this.isDev
+        ? 'http://localhost:8001'  // 本地开发
+        : 'https://cardbuy.xingke888.com'  // 生产环境
+    },
 
     token: null,
     user: null
@@ -14,6 +22,11 @@ App({
 
   onLaunch() {
     console.log('小程序启动')
+    console.log('========================================')
+    console.log('当前模式:', this.globalData.isDev ? '本地开发' : '生产环境')
+    console.log('API地址:', this.globalData.apiBase)
+    console.log('WebView地址:', this.globalData.webBase)
+    console.log('========================================')
 
     // 检查登录状态
     const token = wx.getStorageSync('token')
