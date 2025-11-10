@@ -1,8 +1,13 @@
 App({
   globalData: {
-    // 本地开发配置
-    apiBase: 'http://localhost:8001/api/v1',
-    webBase: 'http://localhost:8001',
+    // 生产环境配置
+    apiBase: 'https://cardbuy.xingke888.com/api/v1',
+    webBase: 'https://cardbuy.xingke888.com',
+
+    // 本地开发配置（开发时取消注释使用）
+    // apiBase: 'http://localhost:8001/api/v1',
+    // webBase: 'http://localhost:8001',
+
     token: null,
     user: null
   },
