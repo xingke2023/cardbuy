@@ -32,7 +32,7 @@ Page({
             console.log('已登录，自动跳转到首页')
             wx.redirectTo({
               url: '/pages/webview/index?url=' +
-                   encodeURIComponent(app.globalData.webBase + '/?token=' + token)
+                   encodeURIComponent(app.globalData.webBase + '/teachers?token=' + token)
             })
           } else {
             // Token 无效，清除登录信息
@@ -94,7 +94,7 @@ Page({
           setTimeout(() => {
             wx.redirectTo({
               url: '/pages/webview/index?url=' +
-                   encodeURIComponent(app.globalData.webBase + '/?token=' + token)
+                   encodeURIComponent(app.globalData.webBase + '/teachers?token=' + token)
             })
           }, 1500)
         } else {
@@ -162,7 +162,7 @@ Page({
                 setTimeout(() => {
                   wx.redirectTo({
                     url: '/pages/webview/index?url=' +
-                         encodeURIComponent(app.globalData.webBase + '/?token=' + token)
+                         encodeURIComponent(app.globalData.webBase + '/teachers?token=' + token)
                   })
                 }, 1500)
 
