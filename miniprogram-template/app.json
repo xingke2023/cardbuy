@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/webview/index",
+    "pages/payment/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Cardbase",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json"
+}

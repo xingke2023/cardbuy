@@ -1,0 +1,14 @@
+<view class="payment-container">
+  <view class="order-info">
+    <text class="amount">¥{{amount}}</text>
+    <text class="desc">{{orderDesc}}</text>
+  </view>
+
+  <button class="btn-pay" bindtap="handlePay" loading="{{loading}}">
+    确认支付
+  </button>
+
+  <view class="tips">
+    <text>支付前请确认订单信息</text>
+  </view>
+</view>

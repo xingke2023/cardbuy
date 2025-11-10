@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan:*)",
+      "Bash(mysql:*)",
+      "Bash(nginx:*)",
+      "Bash(brew services restart:*)",
+      "Bash(brew services start:*)",
+      "Bash(composer:*)",
+      "Bash(curl:*)",
+      "Bash(mkdir:*)",
+      "Bash(php:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}
