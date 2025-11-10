@@ -151,6 +151,8 @@ class AuthController extends Controller
     {
         $request->validate([
             'code' => 'required|string',
+            'nickName' => 'nullable|string',
+            'avatarUrl' => 'nullable|string',
         ]);
 
         $appid = env('WECHAT_MINI_PROGRAM_APPID');
@@ -176,20 +178,30 @@ class AuthController extends Controller
         // 查找或创建用户
         $user = User::where('wechat', $openid)->first();
 
+        $isNewUser = false;
         if (!$user) {
             // 第一次登录，创建新用户
+            $isNewUser = true;
             $user = User::create([
-                'name' => '微信用户',
+                'name' => $request->nickName ?? '微信用户',
                 'email' => $openid . '@wechat.cardbase.com', // 临时邮箱
                 'password' => Hash::make(str()->random(32)), // 随机密码
                 'wechat' => $openid,
+                'avatar' => $request->avatarUrl,
                 'user_type' => 'customer',
                 'is_verified_teacher' => false,
             ]);
+        } else {
+            // 已有用户，更新昵称和头像（如果提供了的话）
+            $updateData = ['session_key' => $sessionKey];
+            if ($request->nickName) {
+                $updateData['name'] = $request->nickName;
+            }
+            if ($request->avatarUrl) {
+                $updateData['avatar'] = $request->avatarUrl;
+            }
+            $user->update($updateData);
         }
-
-        // 保存 session_key（可选，用于解密手机号等）
-        $user->update(['session_key' => $sessionKey]);
 
         // 生成 token
         $token = $user->createToken('mobile-app')->plainTextToken;
@@ -199,7 +211,7 @@ class AuthController extends Controller
             'data' => [
                 'user' => $user,
                 'token' => $token,
-                'is_new_user' => $user->wasRecentlyCreated,
+                'is_new_user' => $isNewUser,
             ],
             'message' => '登录成功',
         ]);

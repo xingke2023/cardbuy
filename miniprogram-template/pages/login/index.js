@@ -131,17 +131,25 @@ Page({
   handleWechatLogin() {
     this.setData({ wechatLoading: true })
 
-    // 1. 调用 wx.login 获取 code
-    wx.login({
-      success: (loginRes) => {
-        if (loginRes.code) {
-          // 2. 将 code 发送到后端
-          wx.request({
-            url: app.globalData.apiBase + '/wechat/login',
-            method: 'POST',
-            data: {
-              code: loginRes.code
-            },
+    // 1. 获取用户信息
+    wx.getUserProfile({
+      desc: '用于完善用户资料',
+      success: (profileRes) => {
+        const { nickName, avatarUrl } = profileRes.userInfo
+
+        // 2. 调用 wx.login 获取 code
+        wx.login({
+          success: (loginRes) => {
+            if (loginRes.code) {
+              // 3. 将 code、昵称和头像发送到后端
+              wx.request({
+                url: app.globalData.apiBase + '/wechat/login',
+                method: 'POST',
+                data: {
+                  code: loginRes.code,
+                  nickName: nickName,
+                  avatarUrl: avatarUrl
+                },
             success: (res) => {
               console.log('微信登录响应:', res)
 
@@ -181,19 +189,26 @@ Page({
               console.error('微信登录失败:', err)
               wx.showToast({ title: '网络错误', icon: 'none' })
             },
-            complete: () => {
+                complete: () => {
+                  this.setData({ wechatLoading: false })
+                }
+              })
+            } else {
+              console.error('获取 code 失败:', loginRes.errMsg)
+              wx.showToast({ title: '微信登录失败', icon: 'none' })
               this.setData({ wechatLoading: false })
             }
-          })
-        } else {
-          console.error('获取 code 失败:', loginRes.errMsg)
-          wx.showToast({ title: '微信登录失败', icon: 'none' })
-          this.setData({ wechatLoading: false })
-        }
+          },
+          fail: (err) => {
+            console.error('wx.login 失败:', err)
+            wx.showToast({ title: '微信授权失败', icon: 'none' })
+            this.setData({ wechatLoading: false })
+          }
+        })
       },
       fail: (err) => {
-        console.error('wx.login 失败:', err)
-        wx.showToast({ title: '微信授权失败', icon: 'none' })
+        console.error('获取用户信息失败:', err)
+        wx.showToast({ title: '请授权获取用户信息', icon: 'none' })
         this.setData({ wechatLoading: false })
       }
     })
